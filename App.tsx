@@ -5,9 +5,10 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,6 +26,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import useOnceAsyncStorage from './app/hooks/useOnceAsyncStorage';
+
+import {AddContactSection} from './app/sections';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,6 +60,10 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
+  const [currentSection, setCurrentSection] = useState<
+    'AddContactSection' | 'Home'
+  >('Home');
+
   const [storedValue] = useOnceAsyncStorage('contacts');
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -85,6 +92,27 @@ function App(): React.JSX.Element {
             </Section>
           )}
           {/* end comment section */}
+
+          {/* Start sections */}
+          {currentSection !== 'AddContactSection' ? (
+            <Button
+              title="Add contact"
+              onPress={() => {
+                setCurrentSection('AddContactSection');
+              }}
+            />
+          ) : (
+            <>
+              <AddContactSection />
+              <Button
+                title="Close"
+                onPress={() => {
+                  setCurrentSection('Home');
+                }}
+              />
+            </>
+          )}
+          {/* end sections */}
 
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
@@ -122,6 +150,9 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  expandedButton: {
+    width: '100%',
   },
 });
 
