@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import useOnceAsyncStorage from './app/hooks/useOnceAsyncStorage';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -56,6 +57,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
+  const [storedValue] = useOnceAsyncStorage('contacts');
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -76,6 +78,14 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          {/* No existing contact records in persisted mode */}
+          {storedValue === null && (
+            <Section title="Not existing records">
+              <Text>You can start with your favorite contact</Text>
+            </Section>
+          )}
+          {/* end comment section */}
+
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
