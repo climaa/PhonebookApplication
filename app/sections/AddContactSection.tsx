@@ -1,14 +1,27 @@
 import React, {useState} from 'react';
-import {Alert, Button, View, Text, TextInput, StyleSheet} from 'react-native';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {SelectList} from 'react-native-dropdown-select-list';
 
-const AddContactSection: React.FC = () => {
+import useOnceAsyncStorage from '../../app/hooks/useOnceAsyncStorage';
+
+const AddContactSection: React.FC = ({closeFn}) => {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [contactType, setContactType] = useState('');
+  const [contactType, setContactType] = useState('Work');
+
+  const [storedValue, saveValue] = useOnceAsyncStorage('contacts');
+
+  const contactTypeList = [
+    {key: 'Work', value: 'Work'},
+    {key: 'Personal', value: 'Personal'},
+    {key: 'Random', value: 'Random'},
+    {key: 'Other', value: 'Other', disabled: true},
+  ];
 
   const handleSubmit = () => {
+    console.log('handlesubmit');
     const formData = {
       name,
       lastName,
@@ -16,7 +29,24 @@ const AddContactSection: React.FC = () => {
       email,
       contactType,
     };
-    Alert.alert('Form Data', JSON.stringify(formData));
+
+    console.log({storedValue});
+    if (storedValue === null || storedValue === '{}') {
+      console.log('one !!!!');
+      const dataMap = new Map();
+      dataMap.set(email, formData);
+      let mapArray = Array.from(dataMap);
+      saveValue(JSON.stringify(mapArray));
+    } else {
+      console.log('second!!!!');
+      const parsedLocalStorage = JSON.parse(storedValue);
+      const dataMap = new Map(parsedLocalStorage);
+      dataMap.set(email, formData);
+      let mapArray = Array.from(dataMap);
+      saveValue(JSON.stringify(mapArray));
+    }
+
+    closeFn();
   };
 
   return (
@@ -52,12 +82,14 @@ const AddContactSection: React.FC = () => {
           placeholder="Email Address"
           keyboardType="email-address"
         />
-        <TextInput
-          style={styles.input}
-          value={contactType}
-          onChangeText={setContactType}
-          placeholder="Contact Type"
+
+        <SelectList
+          setSelected={(val: string) => setContactType(val)}
+          data={contactTypeList}
+          save="value"
+          boxStyles={styles.selectList}
         />
+
         <Button title="Create" onPress={handleSubmit} />
       </View>
     </>
@@ -70,6 +102,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  checkbox: {
+    alignSelf: 'center',
   },
   sectionContainer: {
     marginTop: 32,
@@ -86,6 +121,9 @@ const styles = StyleSheet.create({
     width: '90%',
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  selectList: {
+    width: '90%',
   },
 });
 

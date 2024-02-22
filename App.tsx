@@ -5,8 +5,7 @@
  * @format
  */
 
-import React, {useState} from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -18,58 +17,23 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import useOnceAsyncStorage from './app/hooks/useOnceAsyncStorage';
 
-import {AddContactSection} from './app/sections';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {AddContactSection, ListContacts} from './app/sections';
 
 function App(): React.JSX.Element {
+  const [storedValue] = useOnceAsyncStorage('contacts');
+  const isDarkMode = useColorScheme() === 'dark';
   const [currentSection, setCurrentSection] = useState<
     'AddContactSection' | 'Home'
   >('Home');
 
-  const [storedValue] = useOnceAsyncStorage('contacts');
-  const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  console.log({storedValue});
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -80,16 +44,20 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            ...styles.top,
           }}>
+          <Text style={styles.sectionTitle}>Phonebook</Text>
           {/* No existing contact records in persisted mode */}
           {storedValue === null && (
-            <Section title="Not existing records">
-              <Text>You can start with your favorite contact</Text>
-            </Section>
+            <View style={styles.noRecordsContainer}>
+              <Text style={styles.noRecords}>
+                You can start with your favorite contact, please add a new
+                record
+              </Text>
+            </View>
           )}
           {/* end comment section */}
 
@@ -103,8 +71,9 @@ function App(): React.JSX.Element {
             />
           ) : (
             <>
-              <AddContactSection />
+              <AddContactSection closeFn={() => setCurrentSection('Home')} />
               <Button
+                color="gray"
                 title="Close"
                 onPress={() => {
                   setCurrentSection('Home');
@@ -114,20 +83,12 @@ function App(): React.JSX.Element {
           )}
           {/* end sections */}
 
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          {storedValue !== null && storedValue !== '{}' && (
+            <View style={styles.noRecordsContainer}>
+              <Text>Saved contacts</Text>
+              <ListContacts myMap={storedValue} />
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -140,19 +101,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: '600',
+    textAlign: 'center',
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
   },
-  highlight: {
-    fontWeight: '700',
+  noRecords: {
+    fontSize: 18,
+    fontWeight: '400',
+    textAlign: 'center',
   },
-  expandedButton: {
-    width: '100%',
+  noRecordsContainer: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  top: {
+    paddingTop: 20,
   },
 });
 
