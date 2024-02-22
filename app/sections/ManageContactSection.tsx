@@ -8,14 +8,18 @@ import useAsyncStorage from '../hooks/useAsyncStorage';
 import {Contact} from '../types/contact';
 
 interface ManageContactSectionProps {
-  mapKey: string;
-  closeFn: () => void;
+  navigation: Object | undefined;
+  route: Object;
 }
 
 const ManageContactSection: React.FC<ManageContactSectionProps> = ({
-  mapKey,
-  closeFn,
+  navigation,
+  route,
 }) => {
+  console.log({route});
+
+  const {data: mapKey} = route.params !== undefined ? route.params : {mapKey: null};
+
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -64,7 +68,7 @@ const ManageContactSection: React.FC<ManageContactSectionProps> = ({
       addContact(formData);
     }
 
-    closeFn();
+    navigation.navigate('Contact list');
   };
 
   return (
