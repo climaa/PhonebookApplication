@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import useOnceAsyncStorage from '../../app/hooks/useOnceAsyncStorage';
 
 interface Props {
   myMap: Map<string, string> | null;
@@ -21,8 +22,18 @@ interface Contact {
 }
 
 const ListContacts: React.FC<Props> = ({myMap}) => {
+  const [storedValue, saveValue] = useOnceAsyncStorage('contacts');
+
   let storedArray = JSON.parse(myMap);
   let storedMap = new Map(storedArray);
+
+  function deleteContact(email: string) {
+    const parsedLocalStorage = JSON.parse(storedValue);
+    const dataMap = new Map(parsedLocalStorage);
+    dataMap.delete(email);
+    let mapArray = Array.from(dataMap);
+    saveValue(JSON.stringify(mapArray));
+  }
 
   return (
     <View style={styles.container}>
@@ -52,7 +63,7 @@ const ListContacts: React.FC<Props> = ({myMap}) => {
                   source={require('../images/icons8-edit-64.png')}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => Alert.alert('delete')}>
+              <TouchableOpacity onPress={() => deleteContact(email)}>
                 <Image
                   style={styles.tinyLogo}
                   source={require('../images/icons8-trash-100.png')}

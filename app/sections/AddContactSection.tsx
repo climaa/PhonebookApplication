@@ -11,7 +11,7 @@ const AddContactSection: React.FC = ({closeFn}) => {
   const [email, setEmail] = useState('');
   const [contactType, setContactType] = useState('Work');
 
-  const [storedValue, saveValue] = useOnceAsyncStorage('contacts');
+  const [storedValue, saveValue, , getValues] = useOnceAsyncStorage('contacts');
 
   const contactTypeList = [
     {key: 'Work', value: 'Work'},
@@ -21,7 +21,6 @@ const AddContactSection: React.FC = ({closeFn}) => {
   ];
 
   const handleSubmit = () => {
-    console.log('handlesubmit');
     const formData = {
       name,
       lastName,
@@ -30,15 +29,12 @@ const AddContactSection: React.FC = ({closeFn}) => {
       contactType,
     };
 
-    console.log({storedValue});
     if (storedValue === null || storedValue === '{}') {
-      console.log('one !!!!');
       const dataMap = new Map();
       dataMap.set(email, formData);
       let mapArray = Array.from(dataMap);
       saveValue(JSON.stringify(mapArray));
     } else {
-      console.log('second!!!!');
       const parsedLocalStorage = JSON.parse(storedValue);
       const dataMap = new Map(parsedLocalStorage);
       dataMap.set(email, formData);
@@ -47,6 +43,7 @@ const AddContactSection: React.FC = ({closeFn}) => {
     }
 
     closeFn();
+    getValues('contacts');
   };
 
   return (
@@ -88,6 +85,7 @@ const AddContactSection: React.FC = ({closeFn}) => {
           data={contactTypeList}
           save="value"
           boxStyles={styles.selectList}
+          defaultOption={contactTypeList.at(0)}
         />
 
         <Button title="Create" onPress={handleSubmit} />

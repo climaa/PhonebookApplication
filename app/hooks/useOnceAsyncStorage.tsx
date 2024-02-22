@@ -7,6 +7,7 @@ const useOnceAsyncStorage = (
   string | null,
   (value: string) => Promise<void>,
   (key: string) => Promise<void>,
+  (key: string) => Promise<void>,
 ] => {
   const [value, setValue] = useState<string | null>(null);
 
@@ -45,7 +46,15 @@ const useOnceAsyncStorage = (
     }
   };
 
-  return [value, saveValue, removeValue];
+  const getValues = async (existingKey: string) => {
+    try {
+      await AsyncStorage.getItem(existingKey);
+    } catch (error) {
+      console.error('Error sync data to AsyncStorage:', error);
+    }
+  };
+
+  return [value, saveValue, removeValue, getValues];
 };
 
 export default useOnceAsyncStorage;
