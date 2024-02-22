@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -41,10 +41,11 @@ const ListContacts: React.FC<Props> = ({myMap}) => {
         const {name, lastName, email, phoneNumber, contactType}: Contact = obj;
 
         const backgroundStyle = {
-          backgroundColor: index % 2 ? null : styles.grey,
+          backgroundColor: index % 2 ? {} : styles.grey,
         };
+
         return (
-          <View key={email} style={{...styles.column, backgroundStyle}}>
+          <View key={key} style={{...styles.column, ...backgroundStyle}}>
             <View style={styles.row}>
               <Text style={styles.valueBold}>Full name: </Text>
               <Text style={styles.value}>{name}</Text>
