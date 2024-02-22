@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,33 +7,17 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import useOnceAsyncStorage from '../../app/hooks/useOnceAsyncStorage';
+import useAsyncStorage from '../../app/hooks/useAsyncStorage';
+import {Contact} from '../types/contact';
 
 interface Props {
   myMap: Map<string, string> | null;
 }
 
-interface Contact {
-  name: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  contactType: string;
-}
-
 const ListContacts: React.FC<Props> = ({myMap}) => {
-  const [storedValue, saveValue] = useOnceAsyncStorage('contacts');
-
+  const {deleteContact} = useAsyncStorage('contacts');
   let storedArray = JSON.parse(myMap);
   let storedMap = new Map(storedArray);
-
-  function deleteContact(email: string) {
-    const parsedLocalStorage = JSON.parse(storedValue);
-    const dataMap = new Map(parsedLocalStorage);
-    dataMap.delete(email);
-    let mapArray = Array.from(dataMap);
-    saveValue(JSON.stringify(mapArray));
-  }
 
   return (
     <View style={styles.container}>

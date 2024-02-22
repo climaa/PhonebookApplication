@@ -3,6 +3,9 @@ import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 
 import useOnceAsyncStorage from '../../app/hooks/useOnceAsyncStorage';
+import useAsyncStorage from '../../app/hooks/useAsyncStorage';
+
+import {Contact} from '../types/contact';
 
 const AddContactSection: React.FC = ({closeFn}) => {
   const [name, setName] = useState('');
@@ -11,7 +14,8 @@ const AddContactSection: React.FC = ({closeFn}) => {
   const [email, setEmail] = useState('');
   const [contactType, setContactType] = useState('Work');
 
-  const [storedValue, saveValue, , getValues] = useOnceAsyncStorage('contacts');
+  const [storedValue] = useOnceAsyncStorage('contacts');
+  const {addFirstContact, addContact} = useAsyncStorage('contacts');
 
   const contactTypeList = [
     {key: 'Work', value: 'Work'},
@@ -21,7 +25,7 @@ const AddContactSection: React.FC = ({closeFn}) => {
   ];
 
   const handleSubmit = () => {
-    const formData = {
+    const formData: Contact = {
       name,
       lastName,
       phoneNumber,
@@ -30,20 +34,12 @@ const AddContactSection: React.FC = ({closeFn}) => {
     };
 
     if (storedValue === null || storedValue === '{}') {
-      const dataMap = new Map();
-      dataMap.set(email, formData);
-      let mapArray = Array.from(dataMap);
-      saveValue(JSON.stringify(mapArray));
+      addFirstContact(formData);
     } else {
-      const parsedLocalStorage = JSON.parse(storedValue);
-      const dataMap = new Map(parsedLocalStorage);
-      dataMap.set(email, formData);
-      let mapArray = Array.from(dataMap);
-      saveValue(JSON.stringify(mapArray));
+      addContact(formData);
     }
 
     closeFn();
-    getValues('contacts');
   };
 
   return (
