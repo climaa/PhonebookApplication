@@ -26,6 +26,12 @@ const useAsyncStorage = (key: string): [string | null] => {
     saveValue(JSON.stringify(mapArray));
   };
 
+  const getContact = (email: string) => {
+    const parsedLocalStorage = JSON.parse(storedValue);
+    const dataMap = new Map(parsedLocalStorage);
+    return dataMap.get(email);
+  };
+
   const deleteContact = (email: string) => {
     const parsedLocalStorage = JSON.parse(storedValue);
     const dataMap = new Map(parsedLocalStorage);
@@ -34,7 +40,7 @@ const useAsyncStorage = (key: string): [string | null] => {
     saveValue(JSON.stringify(mapArray));
   };
 
-  return {addFirstContact, addContact, deleteContact};
+  return {addFirstContact, addContact, getContact, deleteContact};
 };
 
 export default useAsyncStorage;

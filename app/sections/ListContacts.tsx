@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import useAsyncStorage from '../../app/hooks/useAsyncStorage';
 import {Contact} from '../types/contact';
 
@@ -14,7 +7,7 @@ interface Props {
   myMap: Map<string, string> | null;
 }
 
-const ListContacts: React.FC<Props> = ({myMap}) => {
+const ListContacts: React.FC<Props> = ({selectKeyFn, myMap}) => {
   const {deleteContact} = useAsyncStorage('contacts');
   let storedArray = JSON.parse(myMap);
   let storedMap = new Map(storedArray);
@@ -42,7 +35,7 @@ const ListContacts: React.FC<Props> = ({myMap}) => {
               <Text style={styles.value}>{contactType}</Text>
               <Text style={styles.valueBold}>Email: </Text>
               <Text style={styles.value}>{email}</Text>
-              <TouchableOpacity onPress={() => Alert.alert('edit')}>
+              <TouchableOpacity onPress={() => selectKeyFn(email)}>
                 <Image
                   style={styles.tinyLogo}
                   source={require('../images/icons8-edit-64.png')}

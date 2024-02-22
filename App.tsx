@@ -20,17 +20,23 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import useOnceAsyncStorage from './app/hooks/useOnceAsyncStorage';
 
-import {AddContactSection, ListContacts} from './app/sections';
+import {ManageContactSection, ListContacts} from './app/sections';
 
 function App(): React.JSX.Element {
   const [storedValue] = useOnceAsyncStorage('contacts');
   const isDarkMode = useColorScheme() === 'dark';
+  const [editKey, setEditKey] = useState(null);
   const [currentSection, setCurrentSection] = useState<
-    'AddContactSection' | 'Home'
+    'ManageContactSection' | 'Home'
   >('Home');
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const selectKeyFn = email => {
+    setCurrentSection('ManageContactSection');
+    setEditKey(email);
   };
 
   return (
@@ -60,20 +66,24 @@ function App(): React.JSX.Element {
           {/* end comment section */}
 
           {/* Start sections */}
-          {currentSection !== 'AddContactSection' ? (
+          {currentSection !== 'ManageContactSection' ? (
             <Button
               title="Add contact"
               onPress={() => {
-                setCurrentSection('AddContactSection');
+                setCurrentSection('ManageContactSection');
               }}
             />
           ) : (
             <>
-              <AddContactSection closeFn={() => setCurrentSection('Home')} />
+              <ManageContactSection
+                mapKey={editKey}
+                closeFn={() => setCurrentSection('Home')}
+              />
               <Button
                 color="gray"
                 title="Close"
                 onPress={() => {
+                  setEditKey(null);
                   setCurrentSection('Home');
                 }}
               />
@@ -81,12 +91,10 @@ function App(): React.JSX.Element {
           )}
           {/* end sections */}
 
-          {storedValue !== null && storedValue !== '{}' && (
-            <View style={styles.noRecordsContainer}>
-              <Text>Saved contacts</Text>
-              <ListContacts myMap={storedValue} />
-            </View>
-          )}
+          <View style={styles.noRecordsContainer}>
+            <Text>Saved contacts</Text>
+            <ListContacts selectKeyFn={selectKeyFn} myMap={storedValue} />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     textAlign: 'center',
+    width: '90%',
   },
   noRecordsContainer: {
     marginTop: 20,

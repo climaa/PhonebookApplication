@@ -1,4 +1,4 @@
-import AddContactSection from './AddContactSection.tsx';
+import ManageContactSection from './ManageContactSection.tsx';
 import ListContacts from './ListContacts.tsx';
 
-export {AddContactSection, ListContacts};
+export {ManageContactSection, ListContacts};
