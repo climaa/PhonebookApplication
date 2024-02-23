@@ -2,6 +2,13 @@ import {renderHook, act} from '@testing-library/react-hooks';
 import useAsyncStorage from '../../app/hooks/useAsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const mockGetItem = AsyncStorage.getItem as jest.MockedFunction<
+  typeof AsyncStorage.getItem
+>;
+const mockSetItem = AsyncStorage.setItem as jest.MockedFunction<
+  typeof AsyncStorage.setItem
+>;
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
@@ -9,8 +16,8 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 
 describe('useAsyncStorage', () => {
   beforeEach(() => {
-    AsyncStorage.getItem.mockClear();
-    AsyncStorage.setItem.mockClear();
+    mockGetItem.mockClear();
+    mockSetItem.mockClear();
   });
 
   it('should add first contact to AsyncStorage', async () => {
@@ -33,7 +40,7 @@ describe('useAsyncStorage', () => {
     );
   });
 
-  it.skip('should add contact to existing AsyncStorage data', async () => {
+  it('should add contact to existing AsyncStorage data', async () => {
     const existingData = [
       [
         'existing@example.com',
