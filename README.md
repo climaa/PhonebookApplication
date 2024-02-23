@@ -4,7 +4,7 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 ## Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ### Step 1: Start the Metro Server
 
@@ -20,64 +20,26 @@ npm start
 yarn start
 ```
 
-### Step 2: Start your Application
+Use the interactive terminal options.
 
-Let Metro Bundler run in its terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Release APK
 
-#### For Android
+To create
 
-```bash
-# using npm
-npm run android
-# or
-npx react-native run-android
-
-# OR using Yarn
-yarn android
+```terminal
+> cd android
+> ./gradlew assembleRelease
 ```
 
-#### For iOS
+Here is the file created `android/app/build/outputs/apk/app-release.apk`
 
-```bash
-# using npm
-npm run ios
+## Helpful links
 
-# OR using Yarn
-yarn ios
-```
+- [React Navigation](https://reactnavigation.org/docs) - How it works the navigation.
+- [Async Storage](https://github.com/react-native-async-storage/async-storage) - Documentation about the storage data
+  - HooKs files for management are `app/hooks/useAsyncStorage.tsx` & `app/hooks/useOnceAsyncStorage.tsx`.
+- [Testing Library](https://testing-library.com/docs/react-native-testing-library/intro/) - Added unit testing.
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+  - Running from the terminal the command `npm run test -- --watch`.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-### Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Windows and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-### Congratulations
-
-You've successfully run and modified your React Native App. :partying_face:
-
-#### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration Guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-## Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-## Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how to set up your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-[Blog](https://reactnative.dev/blog) - Read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- [Dropdown select list](https://github.com/danish1658/react-native-dropdown-select-list) - Library to create Option list in a form.
