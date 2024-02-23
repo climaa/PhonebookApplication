@@ -17,8 +17,7 @@ const ContactsList: React.FC<Props> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text>Phonebook list</Text>
-
+      <Text style={styles.title}>Phonebook list</Text>
       {Array.from(storedMap.entries()).map(([key, obj], index) => {
         const {name, lastName, email, phoneNumber, contactType}: Contact = obj;
 
@@ -73,6 +72,11 @@ const ContactsList: React.FC<Props> = ({navigation}) => {
 const styles = StyleSheet.create({
   grey: {
     backgroundColor: 'grey',
+  },
+  title: {
+    fontSize: 38,
+    marginBottom: 15,
+    marginTop: 40,
   },
   container: {
     flex: 1,
