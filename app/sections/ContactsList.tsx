@@ -49,7 +49,14 @@ const ContactsList: React.FC<Props> = ({navigation}) => {
                   source={require('../images/icons8-edit-64.png')}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => deleteContact(email)}>
+              <TouchableOpacity
+                onPress={() => {
+                  deleteContact(email);
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Contact list'}],
+                  });
+                }}>
                 <Image
                   style={styles.tinyLogo}
                   source={require('../images/icons8-trash-100.png')}

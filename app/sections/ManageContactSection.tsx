@@ -16,9 +16,9 @@ const ManageContactSection: React.FC<ManageContactSectionProps> = ({
   navigation,
   route,
 }) => {
-  console.log({route});
-
-  const {data: mapKey} = route.params !== undefined ? route.params : {mapKey: null};
+  const {
+    data: {mapKey},
+  } = route.params !== undefined ? route.params : {data: {mapKey: null}};
 
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -68,7 +68,10 @@ const ManageContactSection: React.FC<ManageContactSectionProps> = ({
       addContact(formData);
     }
 
-    navigation.navigate('Contact list');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Contact list'}],
+    });
   };
 
   return (
@@ -118,6 +121,8 @@ const ManageContactSection: React.FC<ManageContactSectionProps> = ({
         />
 
         <Button title={mapKey ? 'Edit' : 'Create'} onPress={handleSubmit} />
+
+        <Button title="Go back" onPress={() => navigation.goBack()} />
       </View>
     </>
   );
