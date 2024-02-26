@@ -102,7 +102,9 @@ const ManageContactSection: React.FC<ManageContactSectionProps> = ({
         />
         <TextInput
           style={{
-            backgroundColor: loadedEdit ? '#e5e5e5' : null,
+            backgroundColor: loadedEdit
+              ? styles.disabledInput.backgroundColor
+              : styles.enabledInput.backgroundColor,
             ...styles.input,
           }}
           value={email}
@@ -153,6 +155,12 @@ const styles = StyleSheet.create({
     width: '90%',
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  enabledInput: {
+    backgroundColor: undefined,
+  },
+  disabledInput: {
+    backgroundColor: '#e5e5e5',
   },
   selectList: {
     width: '90%',
